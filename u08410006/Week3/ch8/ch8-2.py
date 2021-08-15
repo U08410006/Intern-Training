@@ -27,9 +27,14 @@ def count_corpus(tokens):
 
 def read_time_machine():
     """Load the time machine dataset into a list of text lines."""
-    with open(d2l.download("time_machine"), "r") as f:
-        lines = f.readlines()
-    return [re.sub("[^A-Za-z]+", " ", line).strip().lower() for line in lines]
+    with open(
+        d2l.download("time_machine"), "r", encoding="utf-8"
+    ) as file_time_machine:
+        time_machine_lines = file_time_machine.readlines()
+    return [
+        re.sub("[^A-Za-z]+", " ", line).strip().lower()
+        for line in time_machine_lines
+    ]
 
 
 def tokenize(lines, token="word"):
@@ -51,9 +56,9 @@ class Vocab:
         if reserved_tokens is None:
             reserved_tokens = []
         # Sort according to frequencies
-        counter = count_corpus(tokens)
+        corpus_token_count = count_corpus(tokens)
         self._token_freqs = sorted(
-            counter.items(), key=lambda x: x[1], reverse=True
+            corpus_token_count.items(), key=lambda x: x[1], reverse=True
         )
         # The index for the unknown token is 0
         self.idx_to_token = ["<unk>"] + reserved_tokens
@@ -78,10 +83,10 @@ class Vocab:
     def to_tokens(self, indices):
         if not isinstance(indices, (list, tuple)):
             return self.idx_to_token[indices]
-        return [self.idx_to_token[index] for index in indices]
+        return [self.idx_to_token[unk_index] for unk_index in indices]
 
     @property
-    def unk(self):  # Index for the unknown token
+    def unk(self):
         return 0
 
     @property

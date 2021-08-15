@@ -5,7 +5,7 @@ from d2l import torch as d2l
 NUM_STEPS = 5
 
 
-def data(pos):
+def corpus_data(pos):
     """ Return a sequence of length `num_steps` starting from `pos`"""
     return corpus[pos : pos + NUM_STEPS]
 
@@ -29,8 +29,8 @@ def seq_data_iter_random(corpus, batch_size, num_steps):
         # Here, `initial_indices` contains randomized starting indices for
         # subsequences
         initial_indices_per_batch = initial_indices[i : i + batch_size]
-        X = [data(j) for j in initial_indices_per_batch]
-        Y = [data(j + 1) for j in initial_indices_per_batch]
+        X = [corpus_data(j) for j in initial_indices_per_batch]
+        Y = [corpus_data(j + 1) for j in initial_indices_per_batch]
         yield torch.tensor(X), torch.tensor(Y)
 
 
